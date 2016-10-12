@@ -106,6 +106,10 @@ public class Utils {
 		| (0xFF & data[(offset + 3)]);
     }
 
+    public static String encryptPassword(String email, String password) throws Exception {
+        return encryptString(email + "\u0000" + password);
+    }
+
     /**
      * Reads all contents of the input stream.
      * 

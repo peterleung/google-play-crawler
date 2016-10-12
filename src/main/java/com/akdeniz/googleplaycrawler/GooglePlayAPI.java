@@ -102,6 +102,7 @@ public class GooglePlayAPI {
     private HttpClient client;
     private String securityToken;
     private String localization;
+    private boolean encryptPassword;
 
     /**
      * Default constructor. ANDROID ID and Authentication token must be supplied
@@ -209,8 +210,17 @@ public class GooglePlayAPI {
      * email and password every time.
      */
     public void login() throws Exception {
+        String passKey, passValue;
 
-	HttpEntity responseEntity = executePost(URL_LOGIN, new String[][] { { "Email", this.getEmail() }, { "Passwd", this.password },
+        if (this.encryptPassword) {
+            passKey = "EncryptedPasswd";
+            passValue = Utils.encryptPassword(this.getEmail(), this.password);
+        } else {
+            passKey = "Passwd";
+            passValue = this.password;
+        }
+
+	HttpEntity responseEntity = executePost(URL_LOGIN, new String[][] { { "Email", this.getEmail() }, { passKey, passValue },
 		{ "service", "androidmarket" }, { "accountType", ACCOUNT_TYPE_HOSTED_OR_GOOGLE }, { "has_permission", "1" },
 		{ "source", "android" }, { "androidId", this.getAndroidID() }, { "app", "com.android.vending" },
 		{ "device_country", "en" }, { "lang", "en" }, { "sdk_version", "16" }, { "client_sig", "38918a453d07199354f8b19af05ec6562ced5788" }, }, null);
@@ -613,4 +623,11 @@ public class GooglePlayAPI {
 		this.localization = localization;
 	}
 
+    public boolean getEncryptPassword() {
+	return encryptPassword;
+    }
+
+    public void setEncryptPassword(boolean encryptPassword) {
+	this.encryptPassword = encryptPassword;
+    }
 }

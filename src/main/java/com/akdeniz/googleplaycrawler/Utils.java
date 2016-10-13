@@ -112,7 +112,7 @@ public class Utils {
     }
 
     public static String generateUserAgentString(String version, int versionCode, int sdk, String device, String hardware, String product) {
-        return "Android-Finsky/%s (api=3,versionCode=%d,sdk=%d,device=%s,hardware=%s,product=%s)".format(
+        return String.format("Android-Finsky/%s (api=3,versionCode=%d,sdk=%d,device=%s,hardware=%s,product=%s)",
             sanitizeHeaderValue(version),
             versionCode,
             sdk,

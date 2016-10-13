@@ -103,6 +103,9 @@ public class GooglePlayAPI {
     private String securityToken;
     private String localization;
     private boolean encryptPassword;
+    private String storeAppVersionString = "3.10.14";
+    private int storeAppVersionCode = 8016014;
+    private int sdk = 16;
 
     /**
      * Default constructor. ANDROID ID and Authentication token must be supplied
@@ -181,7 +184,7 @@ public class GooglePlayAPI {
 	HttpEntity c2dmResponseEntity = executePost(URL_LOGIN, new String[][] { { "Email", this.getEmail() },
 		{ "Passwd", this.password }, { "service", "ac2dm" }, { "accountType", ACCOUNT_TYPE_HOSTED_OR_GOOGLE },
 		{ "has_permission", "1" }, { "source", "android" }, { "app", "com.google.android.gsf" },
-		{ "device_country", "us" }, { "device_country", "us" }, { "lang", "en" }, { "sdk_version", "16" }, { "client_sig", "38918a453d07199354f8b19af05ec6562ced5788" }, }, null);
+		{ "device_country", "us" }, { "device_country", "us" }, { "lang", "en" }, { "sdk_version", String.valueOf(sdk) }, { "client_sig", "38918a453d07199354f8b19af05ec6562ced5788" }, }, null);
 
 	Map<String, String> c2dmAuth = Utils.parseResponse(new String(Utils.readAll(c2dmResponseEntity.getContent())));
 	return c2dmAuth.get("Auth");
@@ -223,7 +226,7 @@ public class GooglePlayAPI {
 	HttpEntity responseEntity = executePost(URL_LOGIN, new String[][] { { "Email", this.getEmail() }, { passKey, passValue },
 		{ "service", "androidmarket" }, { "accountType", ACCOUNT_TYPE_HOSTED_OR_GOOGLE }, { "has_permission", "1" },
 		{ "source", "android" }, { "androidId", this.getAndroidID() }, { "app", "com.android.vending" },
-		{ "device_country", "en" }, { "lang", "en" }, { "sdk_version", "16" }, { "client_sig", "38918a453d07199354f8b19af05ec6562ced5788" }, }, null);
+		{ "device_country", "en" }, { "lang", "en" }, { "sdk_version", String.valueOf(sdk) }, { "client_sig", "38918a453d07199354f8b19af05ec6562ced5788" }, }, null);
 
 	Map<String, String> response = Utils.parseResponse(new String(Utils.readAll(responseEntity.getContent())));
 	if (response.containsKey("Auth")) {
@@ -550,8 +553,7 @@ public class GooglePlayAPI {
 			"nocache:billing.use_charging_poller,market_emails,buyer_currency,prod_baseline,checkin.set_asset_paid_app_field,shekel_test,content_ratings,buyer_currency_in_app,nocache:encrypted_apk,recent_changes" },
 		{ "X-DFE-Device-Id", this.getAndroidID() },
 		{ "X-DFE-Client-Id", "am-android-google" },
-		{ "User-Agent",
-			"Android-Finsky/3.10.14 (api=3,versionCode=8016014,sdk=15,device=GT-I9300,hardware=aries,product=GT-I9300)" },
+		{ "User-Agent", Utils.generateUserAgentString(storeAppVersionString, storeAppVersionCode, sdk, "GT-I9300", "aries", "GT-I9300") },
 		{ "X-DFE-SmallestScreenWidthDp", "320" }, { "X-DFE-Filter-Level", "3" },
 		{ "Host", "android.clients.google.com" },
 		{ "Content-Type", (contentType != null) ? contentType : "application/x-www-form-urlencoded; charset=UTF-8" } };
@@ -629,5 +631,29 @@ public class GooglePlayAPI {
 
     public void setEncryptPassword(boolean encryptPassword) {
 	this.encryptPassword = encryptPassword;
+    }
+
+    public String getStoreAppVersionString() {
+        return storeAppVersionString;
+    }
+
+    public void setStoreAppVersionString(String versionString) {
+        this.storeAppVersionString = versionString;
+    }
+
+    public int getStoreAppVersionCode() {
+        return storeAppVersionCode;
+    }
+
+    public void setStoreAppVersionCode(int versionCode) {
+        this.storeAppVersionCode = versionCode;
+    }
+
+    public int getSdk() {
+        return sdk;
+    }
+
+    public void setSdk(int sdk) {
+        this.sdk = sdk;
     }
 }

@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
+import java.net.URLEncoder;
 import java.security.KeyFactory;
 import java.security.KeyManagementException;
 import java.security.MessageDigest;
@@ -108,6 +109,21 @@ public class Utils {
 
     public static String encryptPassword(String email, String password) throws Exception {
         return encryptString(email + "\u0000" + password);
+    }
+
+    public static String generateUserAgentString(String version, int versionCode, int sdk, String device, String hardware, String product) {
+        return "Android-Finsky/%s (api=3,versionCode=%d,sdk=%d,device=%s,hardware=%s,product=%s)".format(
+            sanitizeHeaderValue(version),
+            versionCode,
+            sdk,
+            sanitizeHeaderValue(device),
+            sanitizeHeaderValue(hardware),
+            sanitizeHeaderValue(product)
+        );
+    }
+
+    public static String sanitizeHeaderValue(String value) {
+        return URLEncoder.encode(value).replace("(", "").replace(")", "");
     }
 
     /**

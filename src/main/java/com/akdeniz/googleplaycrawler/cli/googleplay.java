@@ -46,6 +46,7 @@ import com.akdeniz.googleplaycrawler.gsf.NotificationListener;
 import com.akdeniz.googleplaycrawler.Utils;
 
 import net.sourceforge.argparse4j.ArgumentParsers;
+import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.impl.choice.CollectionArgumentChoice;
 import net.sourceforge.argparse4j.inf.Argument;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
@@ -102,6 +103,8 @@ public class googleplay {
 	parser.addArgument("-a", "--host").nargs("?").help("Proxy host").setDefault(FeatureControl.SUPPRESS);
 	parser.addArgument("-l", "--port").type(Integer.class).nargs("?").help("Proxy port")
 		.setDefault(FeatureControl.SUPPRESS);
+        parser.addArgument("-ep", "--encrypepassword").action(Arguments.storeTrue()).help("Use encrypted password for login.")
+                .setDefault(FeatureControl.SUPPRESS);
 
 	Subparsers subparsers = parser.addSubparsers().description("Command to be executed.");
 
@@ -462,6 +465,9 @@ public class googleplay {
 	if (proxiedHttpClient != null) {
 	    service.setClient(proxiedHttpClient);
 	}
+        if (namespace.getBoolean("encrypepassword")) {
+            service.setEncryptPassword(true);
+        }
     }
 
     private void createCheckinableService(String email, String password, String localization) throws Exception {
@@ -471,6 +477,9 @@ public class googleplay {
 	if (proxiedHttpClient != null) {
 	    service.setClient(proxiedHttpClient);
 	}
+        if (namespace.getBoolean("encrypepassword")) {
+            service.setEncryptPassword(true);
+        }
     }
 
     private void listCommand() throws Exception {
